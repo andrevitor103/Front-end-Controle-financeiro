@@ -1,17 +1,22 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
+    <app-header v-if="!$route.meta.showHeaderMenu">
+    <router-view></router-view>
+    </app-header>
+    <div v-if="$route.meta.showHeaderMenu">
+    <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
+import AppHeader from '@/components/layouts/appHeader'
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    'app-header': AppHeader
   }
 }
 </script>
@@ -23,6 +28,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
 }
 </style>
