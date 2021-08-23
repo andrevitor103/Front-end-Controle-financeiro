@@ -36,9 +36,10 @@
                     <div class="md-layout-item md-size-100 md-small-size-100">
                         <md-field>
                             <label for="status">Status</label>
-                            <md-select name="status" id="status">
-                                <md-option value="PAGA">PAGA</md-option>
-                                <md-option value="EM_ABERTO">EM ABERTO</md-option>
+                            <md-select name="status" id="status" v-model="filter.status">
+                                <md-option value=""></md-option>
+                                <md-option value="1">PAGA</md-option>
+                                <md-option value="0">EM ABERTO</md-option>
                             </md-select> 
                         </md-field>
                     </div>
@@ -95,7 +96,8 @@ export default {
                 data_vencimento: null,
                 data_vencimento_ate: null,
                 data_pagamento: null,
-                data_pagamento_ate: null
+                data_pagamento_ate: null,
+                status: null
             },
             formasPagamentoSelect: [],
             fornecedoresSelect: [],
