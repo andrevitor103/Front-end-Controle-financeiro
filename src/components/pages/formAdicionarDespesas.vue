@@ -6,7 +6,7 @@
             </md-toolbar>
         </div>
         
-        <form name="formData" async action="/" method="POST" @submit.prevent="registerDespesa()">
+        <form name="formData" action="/" method="POST" @submit.prevent="registerDespesa()">
             <md-card class="md-layout-item md-size-100 md-small-size-100">
                     <md-card-header>
                         <div class="md-title">NOVA DESPESA</div>
