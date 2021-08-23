@@ -19,7 +19,7 @@ export default {
     data() {
         return {
             msg: 'Óla mundo',
-			see: true,
+			see: false,
 			responseData: this.data,
 			objectResponse: [
 			{
@@ -81,7 +81,7 @@ export default {
 			this.see = !this.see
 		},
 		async clearAndAddDataDashboard(value) {
-			await this.toggleSee()
+			// await this.toggleSee()	
 			await this.clearDashboard()
 			await this.addData(value)
 		},

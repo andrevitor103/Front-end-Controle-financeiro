@@ -6,10 +6,10 @@
             </md-toolbar>
         </div>
         
-        <form name="formData" action="" method="POST" @submit.prevent="registerDespesa()">
+        <form name="formData" async action="/" method="POST" @submit.prevent="registerDespesa()">
             <md-card class="md-layout-item md-size-100 md-small-size-100">
-                <md-card-header>
-                    <div class="md-title">NOVA DESPESA</div>
+                    <md-card-header>
+                        <div class="md-title">NOVA DESPESA</div>
                 </md-card-header>
                 <div v-if="loadForm">
                     <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
@@ -147,9 +147,9 @@
         }
         },
         methods: {
-                registerDespesa: function()
+                registerDespesa: async function()
                 {
-                    this.toggleLoad()
+                    await this.toggleLoad()
                     this.despesa.DATA_COMPRA = this.formatDate(this.despesa.DATA_COMPRA)
 
                     this.despesa.DESCONTO = this.despesa.DESCONTO != "" ? this.despesa.DESCONTO : 0
@@ -176,7 +176,7 @@
                         this.changeErrorAndChangeMsgForm('Houve algum problema, por favor verifique os seus dados e tente novamente', true)
                     }
                     this.changeErrorAndChangeMsgForm('', false)
-                    this.toggleLoad()
+                    await this.toggleLoad()
                 },
                 toggleLoad: function() {
                     this.loadForm = !this.loadForm
