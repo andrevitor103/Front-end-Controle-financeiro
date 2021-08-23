@@ -19,7 +19,7 @@ export default {
 data() {
 	return {
 		msg: 'Óla mundo',
-		see: true,
+		see: false,
 		responseData: this.data,
 		meses: [],
 		limite: [],
@@ -77,7 +77,7 @@ data() {
 			this.see = !this.see
 		},
 		async clearAndAddDataDashboard(value) {
-			await this.toggleSee()
+			// await this.toggleSee()
 			await this.clearDashboard()
 			await this.addData(value)
 		},
@@ -88,7 +88,7 @@ data() {
 						this.meses.push(item.MES_ANO);
 						this.limite.push(item.LIMITE);
 						this.gastos.push(item.GASTOS);
-						this.saldo.push(item.SALDO);
+							this.saldo.push(item.SALDO);
 					})	
 				})
 			this.createDashboard()	

@@ -94,6 +94,7 @@ export default {
      created () {
         storageService.userLoginSuccess('value')
         this.clearAndGetDatasDashboard()
+        this.toggleFilter(null)
     }
 }
 
