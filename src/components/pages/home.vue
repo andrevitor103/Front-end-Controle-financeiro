@@ -43,7 +43,7 @@
             <tbody>
             <md-table-row v-for="despesa in despesas" :key="despesa.id">
                 <md-table-cell>
-                <md-button class="md-icon-button click"  @click="activeModal(despesaDt.id)" >
+                <md-button class="md-icon-button click"  @click="activeModal(despesa.id)" >
                     <md-icon>visibility</md-icon>
                 </md-button>
                 </md-table-cell>
@@ -65,6 +65,20 @@
                 </md-button>
                 </span>
                 </md-table-cell>
+            </md-table-row>
+            <md-table-row>
+                <md-table-cell>TOTAL</md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell class='total totalParcelas'>{{ total }}</md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell class='total totalJuros'>{{ totalJuros }}</md-table-cell>
+                <md-table-cell class='total totalDesconto'>{{ totalDesconto }}</md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
             </md-table-row>
             </tbody> 
           </md-table>
@@ -142,6 +156,34 @@ export default {
     }
 	}
 	,
+    computed: {
+        total: function () {
+            let total = 0;
+            let diferenca = 0;
+            this.despesas.map((despesa) => {
+                total += parseFloat(despesa.VALOR_PARCELA)
+                  diferenca += (parseFloat(despesa.DESCONTO) ?? 0) - ( parseFloat(despesa.JUROS) ?? 0 )
+            })
+            if (diferenca < 0) {
+                return eval(total + diferenca).toFixed(2)
+            }
+            return eval(total - diferenca).toFixed(2)
+        },
+        totalJuros: function () {
+            let totalJuros = 0;
+            this.despesas.map((despesa) => {
+                totalJuros += parseFloat(despesa.JUROS)
+            })
+            return totalJuros.toFixed(2)
+        },
+        totalDesconto: function () {
+            let totalDesconto = 0;
+            this.despesas.map((despesa) => {
+                totalDesconto += parseFloat(despesa.DESCONTO)
+            })
+            return totalDesconto.toFixed(2)
+        }
+    },
     filters: {
         StrLowerCase: (value) => {
                 return value.toUpperCase()
@@ -173,6 +215,21 @@ export default {
 </script>
 
 <style scoped>
+
+    .total {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .totalParcelas {
+        color: blue;
+    }
+    .totalJuros {
+        color: red;
+    }
+    .totalDesconto {
+        color: green;
+    }
     .click {
         cursor: pointer;
         color: #f00;
