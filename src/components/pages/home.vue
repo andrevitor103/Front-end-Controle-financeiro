@@ -1,13 +1,13 @@
 <template>
-    <div class="md-layout">
-    <div class="md-layout md-gutter">
+    <div>
+    <div class="md-layout md-gutter" style="max-width: 100%">
           <div class="md-layout-item">
         <div>
-        <keep-alive>
         <transition name="fade">
-            <component v-if="!filterActive" @filterTableMain="toggleFilter($event)" v-bind:is="filtro"></component>
+            <keep-alive>
+                <component v-if="!filterActive" @filterTableMain="toggleFilter($event)" v-bind:is="filtro"></component>
+            </keep-alive>
         </transition>
-        </keep-alive>
         </div>
          
          <md-dialog :md-active.sync="activeModalChild">
@@ -18,12 +18,13 @@
             <md-button class="md-primary" @click="activeModal">Save</md-button>
             
           </md-dialog>
-
-            <md-button class="md-fab md-mini md-plain" @click="toggleFilter($event)" style="display: flex">
-                <md-icon>search</md-icon>
-            </md-button>
+            <div>
+                <md-button class="md-fab md-mini md-plain" @click="toggleFilter($event)" style="display: flex">
+                    <md-icon>search</md-icon>
+                </md-button>
+            </div>
         
-         <md-table md-card>
+         <md-table style="max-width: 100%; margin-bottom: 20px">
             <thead>
             <md-table-row>
                 <md-table-head></md-table-head>
@@ -39,28 +40,28 @@
                 <md-table-head>AÇÕES</md-table-head>
             </md-table-row>
             </thead>
-            <tbody  v-for="despesa in despesas" :key="despesa.id">
-            <md-table-row v-for="(despesaDt,indexDt) in despesa.detalhes" :key="despesaDt.id">
+            <tbody>
+            <md-table-row v-for="despesa in despesas" :key="despesa.id">
                 <md-table-cell>
                 <md-button class="md-icon-button click"  @click="activeModal(despesaDt.id)" >
                     <md-icon>visibility</md-icon>
                 </md-button>
                 </md-table-cell>
-                <md-table-cell>{{ despesa['forma_pagamento']['DESCRICAO'] | StrLowerCase }}</md-table-cell>
-                <md-table-cell>{{ despesa['fornecedor']['RAZAO_SOCIAL'] | StrLowerCase }}</md-table-cell>
-                <md-table-cell v-text="despesa['detalhes'][indexDt].VALOR_PARCELA"></md-table-cell>
-                <md-table-cell>{{ despesa['TOTAL_PARCELAS'] }} / {{ despesa['detalhes'][indexDt].NUMERO_PARCELA }}</md-table-cell>
-                <md-table-cell>{{ despesa['detalhes'][indexDt].DATA_VENCIMENTO }}</md-table-cell>
-                <md-table-cell> {{ despesa['detalhes'][indexDt].JUROS }} </md-table-cell>
-                <md-table-cell> {{ despesa['detalhes'][indexDt].DESCONTO }} </md-table-cell>
-                <md-table-cell> {{  despesa['detalhes'][indexDt].DATA_PAGAMENTO  }} </md-table-cell>
-                <md-table-cell :class="{'emAberto': !despesa['detalhes'][indexDt].STATUS, 'pago': despesa['detalhes'][indexDt].STATUS}">{{  despesa['detalhes'][indexDt].DATA_PAGAMENTO  == null ? 'ABERTO' : 'PAGO' }}</md-table-cell>
+                <md-table-cell>{{ despesa["DESCRICAO"] | StrLowerCase }}</md-table-cell>
+                <md-table-cell>{{ despesa['RAZAO_SOCIAL'] | StrLowerCase }}</md-table-cell>
+                <md-table-cell v-text="despesa['VALOR_PARCELA']"></md-table-cell>
+                <md-table-cell> {{ despesa['NUMERO_PARCELA'] }}</md-table-cell>
+                <md-table-cell>{{ despesa['DATA_VENCIMENTO'] }}</md-table-cell>
+                <md-table-cell> {{ despesa['JUROS'] }} </md-table-cell>
+                <md-table-cell> {{ despesa['DESCONTO'] }} </md-table-cell>
+                <md-table-cell> {{  despesa['DATA_PAGAMENTO']  }} </md-table-cell>
+                <md-table-cell :class="{'emAberto': !despesa['STATUS'], 'pago': despesa['STATUS']}">{{  despesa['DATA_PAGAMENTO']  == null ? 'ABERTO' : 'PAGO' }}</md-table-cell>
                 <md-table-cell>
                 <span>
                 <md-button 
-                :class="{'md-raised md-accent':  !despesa['detalhes'][indexDt].STATUS, 'md-raised md-primary': despesa['detalhes'][indexDt].STATUS }"
-                @click="pagar($event, despesa['detalhes'][indexDt])">
-                {{  despesa['detalhes'][indexDt].STATUS | changeTextStatus }}
+                :class="{'md-raised md-accent':  !despesa['STATUS'], 'md-raised md-primary': despesa['STATUS'] }"
+                @click="pagar($event, despesa)">
+                {{  despesa['STATUS'] | changeTextStatus }}
                 </md-button>
                 </span>
                 </md-table-cell>
@@ -160,15 +161,11 @@ export default {
     watch: {
         despesas: (value) =>{
             return value.map((valores) => {
-                if (valores?.detalhes.length > 0) {
-                    valores?.detalhes.map((valoresDetalhes) => {
-                        if( valoresDetalhes.DATA_PAGAMENTO ){
-                            valoresDetalhes['STATUS'] = true
-                        }else{
-                            valoresDetalhes['STATUS'] = false
-                        }
-                    })
-                }
+                    if( valores.DATA_PAGAMENTO ){
+                        valores['STATUS'] = true
+                    }else{
+                        valores['STATUS'] = false
+                    }
             })
         }
     }
