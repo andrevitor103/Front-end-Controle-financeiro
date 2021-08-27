@@ -4,7 +4,7 @@ export default {
     list: () => {
         return http.get(`despesas/dashboard/limite-despesas/${storageService.getStorage('value')}`)
     },
-    filter: (filter, id = 1) => {
+    filter: (filter, id = storageService.getStorage("value")) => {
           let camposData = ["data_vencimento", "data_vencimento_ate", "data_pagamento", "data_pagamento_ate"]
          camposData.forEach((item) => {
             if (filter[item]) {
@@ -25,7 +25,7 @@ export default {
             status: [filter.status]
         })
     },
-    filterLine:  (filter, id = 1) => {
+    filterLine:  (filter, id = storageService.getStorage("value")) => {
 
         let camposData = ["data_vencimento", "data_vencimento_ate", "data_pagamento", "data_pagamento_ate"]
          camposData.forEach((item) => {
