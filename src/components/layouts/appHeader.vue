@@ -38,7 +38,7 @@
             </md-list-item>
             </md-list>
         </md-app-drawer>
-            <md-app-content>
+            <md-app-content style="max-width: 100%; height: 100vh">
             <slot></slot>
         </md-app-content>
         </md-app>
