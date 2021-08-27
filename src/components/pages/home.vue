@@ -5,7 +5,7 @@
         <div>
         <keep-alive>
         <transition name="fade">
-            <component v-if="!filterActive" @filterTableMain="activeFilter($emit)" v-bind:is="filtro"></component>
+            <component v-if="!filterActive" @filterTableMain="toggleFilter($event)" v-bind:is="filtro"></component>
         </transition>
         </keep-alive>
         </div>
@@ -19,7 +19,7 @@
             
           </md-dialog>
 
-            <md-button class="md-fab md-mini md-plain" @click="activeFilter()" style="display: flex">
+            <md-button class="md-fab md-mini md-plain" @click="toggleFilter($event)" style="display: flex">
                 <md-icon>search</md-icon>
             </md-button>
         
@@ -78,6 +78,7 @@ import detalhesDespesa from '@/components/pages/DetalhesDespesa'
 import Despesa from '@/services/despesa.js'
 import storageService from '@/services/storage.js'
 
+
 export default {
     name: 'home',
     components: {
@@ -97,38 +98,49 @@ export default {
         }
     },
     methods: {
-        teste: function () {
-            if (this.filtro == this.filtro2 ) {
-                this.filtro = this.detalhesDespesa
-            } else {
-                this.filtro = this.filtro2
-            }
-            alert("Aquii")
-        },
         pagar: function($event, index)
         {
             Despesa.changePayment(index.id)
             .then( () => this.reloadDespesas())
         },
-        activeFilter: function()
-        {
-            this.filterActive = !this.filterActive
+		toggleFilter: function($event) {
+            this.filterActive = !this.filterActive  
+            this.clearAndGetDatasTable($event)
+        },
+		clearAndGetDatasTable: async function($event) {
+            /*await this.clearTable()*/
+            this.reloadDespesas($event)    
+        },
+		clearTable: function() {
+            this.despesas = []
         },
         activeModal: function(index)
         {    
             this.idDespesa = index
             this.activeModalChild = !this.activeModalChild
         },
-        reloadDespesas: function()
+         reloadDespesas: function($event)
         {
-            Despesa.list()
+			if ($event?.component?.filter) {
+			
+            Despesa.filter($event.component.filter)
             .then((response) => {
                 this.despesas = response.data.detalhes_despesas
                 console.log( this.despesas)
                 }
-            )    
-        } 
-    },
+            )
+			return "";
+		}			
+	
+		Despesa.list()
+            .then((response) => {
+                this.despesas = response.data.detalhes_despesas
+                console.log( this.despesas)
+                }
+            )   
+    }
+	}
+	,
     filters: {
         StrLowerCase: (value) => {
                 return value.toUpperCase()
@@ -141,7 +153,8 @@ export default {
         }
     },
     mounted () {
-            this.reloadDespesas()
+			this.reloadDespesas()
+			/*this.clearAndGetDatasTable()*/
             storageService.userLoginSuccess('value')
     },
     watch: {
@@ -160,7 +173,6 @@ export default {
         }
     }
 }
-
 </script>
 
 <style scoped>
@@ -187,5 +199,4 @@ export default {
     transform: translateX(10px);
     opacity: 0.2;
     }
-
 </style>

@@ -27,5 +27,26 @@ export default{
             ID_FORMA_PAGAMENTO: newDespesa.ID_FORMA_PAGAMENTO,
             ID_USUARIO: storageService.getStorage('value')
         })
-    }
+    },
+ filter: (filter, id = storageService.getStorage("value")) => {
+          let camposData = ["data_vencimento", "data_vencimento_ate", "data_pagamento", "data_pagamento_ate"]
+         camposData.forEach((item) => {
+            if (filter[item]) {
+                let data = filter[item]
+                if (data instanceof Date) {
+                    filter[item] = `${data.getFullYear()}-${data.getMonth()}-${data.getDate()}`
+                }
+            }
+        });
+        return http.post(`despesas-filter/${id}`,{ 
+            fornecedor:  filter.fornecedor,
+            forma_pagamento: filter.forma_pagamento,
+            categoria: filter.categoria,
+            data_vencimento: [filter.data_vencimento],
+            data_vencimento_ate: [filter.data_vencimento_ate],
+            data_pagamento: [filter.data_pagamento],
+            data_pagamento_ate: [filter.data_pagamento_ate],
+            status: [filter.status]
+        })
+    },
 }
