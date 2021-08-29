@@ -5,7 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "postinstall": "npm run build",
+    "start": "node server.js",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run dev"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.0-alpha.22",
@@ -14,6 +17,7 @@
     "axios": "^0.21.1",
     "chart.js": "^3.5.0",
     "core-js": "^3.6.5",
+    "express": "^4.17.1",
     "primeflex": "^3.0.0",
     "primeicons": "^4.1.0",
     "primevue": "^2.4.2",
