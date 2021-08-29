@@ -148,12 +148,11 @@ export default {
   },
   methods: {
     actulizeValuesToEdit: function($event) {
-      console.log($event.despesa);
+      $event;
       this.reloadDespesas();
     },
     pagar: function($event, index) {
       Despesa.changePayment(index.id).then(() => {
-        console.log(index);
         let positionArray = this.despesas.indexOf(index);
         if (positionArray != -1) {
           if (this.despesas[positionArray].DATA_PAGAMENTO != null) {
@@ -172,16 +171,14 @@ export default {
 
           this.despesas[positionArray].DATA_PAGAMENTO = dateActual();
         }
-        console.log(this.despesas.indexOf(index));
       });
     },
     toggleFilter: function($event) {
       this.filterActive = !this.filterActive;
-      this.filterActive = $event?.component?.filter;
+      this.filtroActive = $event?.component?.filter;
       this.clearAndGetDatasTable();
     },
     clearAndGetDatasTable: async function($event) {
-      /*await this.clearTable()*/
       $event;
       this.reloadDespesas();
     },
@@ -192,21 +189,16 @@ export default {
       this.idDespesa = index;
       this.activeModalChild = !this.activeModalChild;
     },
-    teste: () => {
-      alert("Aquii");
-    },
     reloadDespesas: function() {
-      if (this.filterActive) {
-        Despesa.filter(this.filterActive).then((response) => {
+      if (this.filtroActive != "") {
+        Despesa.filter(this.filtroActive).then((response) => {
           this.despesas = response.data.detalhes_despesas;
-          console.log(this.despesas);
         });
         return "";
       }
 
       Despesa.list().then((response) => {
         this.despesas = response.data.detalhes_despesas;
-        console.log(this.despesas);
       });
     },
   },
@@ -245,7 +237,6 @@ export default {
       return value.toUpperCase();
     },
     changeTextStatus: (value) => {
-      console.log("teste");
       if (value) {
         return "REATIVAR";
       }

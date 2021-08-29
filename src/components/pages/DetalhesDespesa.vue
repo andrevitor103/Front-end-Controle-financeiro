@@ -245,7 +245,6 @@ export default {
     reloadParcela: function() {
       ParcelaService.list(this.despesaId).then((response) => {
         this.parcela = response.data.detalhes_despesa[0];
-        console.log(this.parcela);
       });
     },
     toggleEditAndEditParcel: function() {
@@ -263,14 +262,11 @@ export default {
     },
     updateParcel: function() {
       ParcelaService.update(this.parcela).then((response) => {
-        console.log(response);
+        response;
         this.UpdatedSuccessfully();
       });
     },
     UpdatedSuccessfully: function() {
-      console.log(this.despesaEdit);
-      console.log(this.parcela);
-      console.log(this.fornecedoresSelect);
       this.despesaEdit.ID = this.despesaId;
       this.despesaEdit.DATA_PAGAMENTO = this.parcela.DATA_PAGAMENTO;
       this.despesaEdit.DATA_VENCIMENTO = this.parcela.DATA_VENCIMENTO;
