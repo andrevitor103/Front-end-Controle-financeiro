@@ -205,17 +205,15 @@ export default {
   computed: {
     total: function() {
       let total = 0;
-      let diferenca = 0;
+      let juros = 0;
+      let desconto = 0;
       this.despesas.map((despesa) => {
         total += parseFloat(despesa.VALOR_PARCELA);
-        diferenca +=
-          (parseFloat(despesa.DESCONTO) ?? 0) -
-          (parseFloat(despesa.JUROS) ?? 0);
+        juros += parseFloat(despesa.JUROS) ?? 0;
+        desconto += parseFloat(despesa.DESCONTO) ?? 0;
       });
-      if (diferenca < 0) {
-        return eval(total + diferenca).toFixed(2);
-      }
-      return eval(total - diferenca).toFixed(2);
+      return eval(total + juros - desconto).toFixed(2);
+      // return eval(total - diferenca).toFixed(2);
     },
     totalJuros: function() {
       let totalJuros = 0;
