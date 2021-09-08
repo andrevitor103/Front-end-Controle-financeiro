@@ -8,7 +8,9 @@
         <h3 class="md-title">{{ msgForm }}</h3>
       </md-toolbar>
     </div>
+
     <form
+      id="formDespesa"
       name="formData"
       action="/"
       method="POST"
@@ -25,7 +27,10 @@
           <div class="md-layout md-gutter">
             <div class="md-layout-item md-small-size-100">
               <md-field
-                :class="{ 'md-invalid': $v.despesa.ID_FORMA_PAGAMENTO.$error }"
+                :class="{
+                  'md-invalid':
+                    $v.despesa.ID_FORMA_PAGAMENTO.$error && !inicial,
+                }"
               >
                 <label for="ID_FORMA_PAGAMENTO">PAGAMENTO</label>
                 <md-select
@@ -55,7 +60,7 @@
                 </md-button>
                 <span
                   class="md-error"
-                  v-if="!$v.despesa.ID_FORMA_PAGAMENTO.required"
+                  v-if="!$v.despesa.ID_FORMA_PAGAMENTO.required && !inicial"
                   >Campo obrigatório</span
                 >
               </md-field>
@@ -63,7 +68,9 @@
 
             <div class="md-layout-item md-small-size-100">
               <md-field
-                :class="{ 'md-invalid': $v.despesa.ID_FORNECEDOR.$error }"
+                :class="{
+                  'md-invalid': $v.despesa.ID_FORNECEDOR.$error && !inicial,
+                }"
               >
                 <label for="ID_FORNECEDOR">FORNECEDOR</label>
                 <md-select
@@ -92,7 +99,9 @@
                 >
                   <md-icon>cached</md-icon>
                 </md-button>
-                <span class="md-error" v-if="!$v.despesa.ID_FORNECEDOR.required"
+                <span
+                  class="md-error"
+                  v-if="!$v.despesa.ID_FORNECEDOR.required && !inicial"
                   >Campo obrigatório</span
                 >
               </md-field>
@@ -102,7 +111,9 @@
           <div class="md-layout md-gutter">
             <div class="md-layout-item md-small-size-100">
               <md-field
-                :class="{ 'md-invalid': $v.despesa.VALOR_DESPESA.$error }"
+                :class="{
+                  'md-invalid': $v.despesa.VALOR_DESPESA.$error && !inicial,
+                }"
               >
                 <label for="VALOR_DESPESA">VALOR</label>
                 <span class="md-prefix">R$</span>
@@ -113,7 +124,9 @@
                   autocomplete="off"
                   v-model.number="$v.despesa.VALOR_DESPESA.$model"
                 />
-                <span class="md-error" v-if="!$v.despesa.VALOR_DESPESA.required"
+                <span
+                  class="md-error"
+                  v-if="!$v.despesa.VALOR_DESPESA.required && !inicial"
                   >Campo obrigatório</span
                 >
               </md-field>
@@ -168,7 +181,9 @@
 
             <div class="md-layout-item md-small-size-100">
               <md-field
-                :class="{ 'md-invalid': $v.despesa.TOTAL_PARCELAS.$error }"
+                :class="{
+                  'md-invalid': $v.despesa.TOTAL_PARCELAS.$error && !inicial,
+                }"
               >
                 <label for="TOTAL_PARCELAS">TOTAL PARCELAS</label>
                 <md-input
@@ -181,7 +196,7 @@
                 />
                 <span
                   class="md-error"
-                  v-if="!$v.despesa.TOTAL_PARCELAS.required"
+                  v-if="!$v.despesa.TOTAL_PARCELAS.required && !inicial"
                   >Campo obrigatório</span
                 >
               </md-field>
@@ -191,7 +206,9 @@
           <div class="md-layout md-gutter">
             <div class="md-layout-item md-small-size-100">
               <md-field
-                :class="{ 'md-invalid': $v.despesa.DATA_COMPRA.$error }"
+                :class="{
+                  'md-invalid': $v.despesa.DATA_COMPRA.$error && !inicial,
+                }"
               >
                 <md-datepicker
                   name="DATA_COMPRA"
@@ -200,7 +217,9 @@
                 >
                   <label>DT COMPRA</label>
                 </md-datepicker>
-                <span class="md-error" v-if="!$v.despesa.DATA_COMPRA.required"
+                <span
+                  class="md-error"
+                  v-if="!$v.despesa.DATA_COMPRA.required && !inicial"
                   >Campo obrigatório</span
                 >
               </md-field>
@@ -233,6 +252,7 @@ export default {
       msgForm: "",
       error: false,
       loadForm: false,
+      inicial: true,
       formasPagamentoSelect: [],
       fornecedoresSelect: [],
       categoriasSelect: [],
@@ -250,6 +270,7 @@ export default {
   },
   methods: {
     registerDespesa: async function() {
+      this.inicial = false;
       await this.toggleLoad();
 
       this.despesa.VALOR_DESPESA = await this.formatValueCurrency(
@@ -272,7 +293,7 @@ export default {
               this.changeErrorAndChangeMsgForm("Cadastrado com sucesso", false);
               this.$emit("newDespesa", { despesa: this.despesa });
               this.toggleLoad();
-              console.log(this.despesa.VALOR_DESPESA);
+              this.clearForm();
             } else {
               this.changeErrorAndChangeMsgForm(
                 "Houve algum problema, por favor verifique os seus dados e tente novamente",
@@ -328,6 +349,16 @@ export default {
         return true;
       }
       return false;
+    },
+    clearForm: function() {
+      this.despesa.ID_FORMA_PAGAMENTO = null;
+      this.despesa.ID_FORNECEDOR = "";
+      this.despesa.VALOR_DESPESA = "";
+      this.despesa.DESCONTO = "";
+      this.despesa.ID_CATEGORIA = "";
+      this.despesa.TOTAL_PARCELAS = "";
+      (this.despesa.DATA_COMPRA = new Date()), (this.despesa.JUROS_ATRASO = "");
+      this.inicial = true;
     },
     loadSelectFormasPagamento: function() {
       FormasPagamentoService.list().then(
