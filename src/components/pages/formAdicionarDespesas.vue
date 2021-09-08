@@ -8,7 +8,6 @@
         <h3 class="md-title">{{ msgForm }}</h3>
       </md-toolbar>
     </div>
-
     <form
       name="formData"
       action="/"
@@ -108,7 +107,7 @@
                 <label for="VALOR_DESPESA">VALOR</label>
                 <span class="md-prefix">R$</span>
                 <md-input
-                  type="number"
+                  type="text"
                   id="VALOR_DESPESA"
                   name="VALOR_DESPESA"
                   autocomplete="off"
@@ -125,7 +124,7 @@
                 <label for="DESCONTO">DESCONTO</label>
                 <span class="md-prefix">R$</span>
                 <md-input
-                  type="number"
+                  type="text"
                   id="DESCONTO"
                   name="DESCONTO"
                   autocomplete="off"
@@ -253,10 +252,15 @@ export default {
     registerDespesa: async function() {
       await this.toggleLoad();
 
-      this.despesa.DATA_COMPRA = this.formatDate(this.despesa.DATA_COMPRA);
+      this.despesa.VALOR_DESPESA = await this.formatValueCurrency(
+        this.despesa.VALOR_DESPESA
+      );
 
-      this.despesa.DESCONTO =
-        this.despesa.DESCONTO != "" ? this.despesa.DESCONTO : 0;
+      this.despesa.DESCONTO = await this.formatValueCurrency(
+        this.despesa.DESCONTO
+      );
+
+      this.despesa.DATA_COMPRA = this.formatDate(this.despesa.DATA_COMPRA);
 
       this.despesa.TOTAL_PARCELAS =
         this.despesa.TOTAL_PARCELAS != "" ? this.despesa.TOTAL_PARCELAS : 1;
@@ -268,6 +272,7 @@ export default {
               this.changeErrorAndChangeMsgForm("Cadastrado com sucesso", false);
               this.$emit("newDespesa", { despesa: this.despesa });
               this.toggleLoad();
+              console.log(this.despesa.VALOR_DESPESA);
             } else {
               this.changeErrorAndChangeMsgForm(
                 "Houve algum problema, por favor verifique os seus dados e tente novamente",
@@ -295,6 +300,13 @@ export default {
     },
     toggleLoad: function() {
       this.loadForm = !this.loadForm;
+    },
+    formatValueCurrency: (value) => {
+      if (!value) {
+        return 0;
+      }
+      value = String(value).replace(",", ".");
+      return parseFloat(value).toFixed(2);
     },
     formatDate: function(dateFormat) {
       if (dateFormat) {
