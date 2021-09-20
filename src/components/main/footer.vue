@@ -1,7 +1,7 @@
 <template>
     <div>
         <footer>
-            <p>Made André Vitor @ 2021-2021</p>
+            <p>Made By André Vitor @ 2021-2021</p>
         </footer>
     </div>
 </template>
